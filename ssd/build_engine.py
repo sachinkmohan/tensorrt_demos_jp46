@@ -286,14 +286,21 @@ def main():
         text=True,
         debug_mode=DEBUG_UFF)
     with trt.Builder(TRT_LOGGER) as builder, builder.create_network() as network, trt.UffParser() as parser:
-        builder.max_workspace_size = 1 << 28
+        #Fix mentioned by jkjung in https://github.com/jkjung-avt/tensorrt_demos/issues/490#issuecomment-962535384
+        config = builder.create_builder_config()
+        config.max_workspace_size = 1 << 30
+        # fix ends here
+
         builder.max_batch_size = 1
-        builder.fp16_mode = True
+        config.set_flag(trt.BuilderFlag.FP16)
 
         parser.register_input('Input', INPUT_DIMS)
         parser.register_output('MarkOutput_0')
         parser.parse(spec['tmp_uff'], network)
-        engine = builder.build_cuda_engine(network)
+
+        #fix start
+        engine = builder.build_engine(network, config)
+        #fix ends here
 
         buf = engine.serialize()
         with open(spec['output_bin'], 'wb') as f:
