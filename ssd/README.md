@@ -1,3 +1,11 @@
+
+Updated: 
+- There are some warnings `[TensorRT] INFO: Some tactics do not have sufficient workspace memory to run. Increasing workspace size may increase performance, please check verbose output.
+`
+- Refer build_engine.py for the changes
+
+
+-----------------------------------------------------------
 Reference:
 
 1. [AastaNV/TRT_object_detection](https://github.com/AastaNV/TRT_object_detection)
