@@ -1,3 +1,8 @@
+## This repo updates
+- Updated the SSD folder which now works on Jetpack 4.6, TF version - 1.15
+
+----------------------
+
 # tensorrt_demos
 
 Examples demonstrating how to optimize Caffe/TensorFlow/DarkNet/PyTorch models with TensorRT and do inference on NVIDIA Jetson or x86_64 platforms.  Highlights:
