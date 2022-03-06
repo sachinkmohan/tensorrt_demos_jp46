@@ -44,7 +44,7 @@ def parse_args():
     return args
 
 
-def loop_and_detect(cam, trt_ssd, conf_th, vis):
+def loop_and_detect(trt_ssd, conf_th, vis):
     """Continuously capture images from camera and do object detection.
 
     # Arguments
@@ -56,10 +56,14 @@ def loop_and_detect(cam, trt_ssd, conf_th, vis):
     full_scrn = False
     fps = 0.0
     tic = time.time()
+    cap = cv2.VideoCapture('video_coco.mp4')
     while True:
         if cv2.getWindowProperty(WINDOW_NAME, 0) < 0:
             break
-        img = cam.read()
+        #img = cam.read()
+        ret, frame = cap.read()
+        #frame = cv2.imread('traffic.jpg')
+        img = cv2.resize(frame, (300,300))
         if img is None:
             break
         boxes, confs, clss = trt_ssd.detect(img, conf_th)
@@ -81,20 +85,20 @@ def loop_and_detect(cam, trt_ssd, conf_th, vis):
 
 def main():
     args = parse_args()
-    cam = Camera(args)
-    if not cam.isOpened():
-        raise SystemExit('ERROR: failed to open camera!')
+    #cam = Camera(args)
+    #if not cam.isOpened():
+    #    raise SystemExit('ERROR: failed to open camera!')
 
     cls_dict = get_cls_dict(args.model.split('_')[-1])
     trt_ssd = TrtSSD(args.model, INPUT_HW)
 
     open_window(
         WINDOW_NAME, 'Camera TensorRT SSD Demo',
-        cam.img_width, cam.img_height)
+        300, 300)
     vis = BBoxVisualization(cls_dict)
-    loop_and_detect(cam, trt_ssd, conf_th=0.3, vis=vis)
+    loop_and_detect(trt_ssd, conf_th=0.3, vis=vis)
 
-    cam.release()
+    #cam.release()
     cv2.destroyAllWindows()
 
 
